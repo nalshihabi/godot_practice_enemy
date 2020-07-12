@@ -53,4 +53,6 @@ shape = SubResource( 2 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 [connection signal="animation_finished" from="Player" to="." method="_on_animation_finished"]

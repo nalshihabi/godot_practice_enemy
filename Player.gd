@@ -30,6 +30,8 @@ var dir = 1
 var velocity
 var state = STATE_NO_ATTACK
 
+#-----------------------------------------------------
+# Member methods
 func flip(new_dir):
 	$Player.flip_h = false if new_dir == 1 else true
 	dir = new_dir
@@ -41,18 +43,14 @@ func attack():
 	state = STATE_ATTACK
 	$Player.play(ATTACK)
 
-func _on_animation_finished():
-	if $Player.animation == ATTACK:
-		$Player.animation = IDLE
-		state = STATE_NO_ATTACK
-
-# Called when the node enters the scene tree for the first time.
+#-----------------------------------------------------
+# Internal methods
 func _ready():
 	velocity = Vector2()
 	$Player.playing = true
 	state = STATE_NO_ATTACK
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if state == STATE_NO_ATTACK:
 		if Input.is_action_pressed(RIGHT):
 			flip(1)
@@ -69,7 +67,6 @@ func _physics_process(delta):
 			attack()
 
 	velocity.y += GRAVITY
-
 	if abs(velocity.x) <= EPSILON and not state == STATE_ATTACK:
 		velocity.x = 0
 		$Player.animation = IDLE
@@ -78,3 +75,8 @@ func _physics_process(delta):
 
 	if is_on_floor():
 		velocity.x = lerp(velocity.x, 0, .6)
+
+func _on_animation_finished():
+	if $Player.animation == ATTACK:
+		$Player.animation = IDLE
+		state = STATE_NO_ATTACK
