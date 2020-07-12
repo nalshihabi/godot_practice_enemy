@@ -1,0 +1,56 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=1]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-idle-2-00.png" type="Texture" id=2]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-idle-2-01.png" type="Texture" id=3]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-idle-2-02.png" type="Texture" id=4]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-idle-2-03.png" type="Texture" id=5]
+[ext_resource path="res://assets/Adventurer/Individual Sprites/adventurer-attack2-00.png" type="Texture" id=6]
+[ext_resource path="res://assets/Adventurer/Individual Sprites/adventurer-attack2-02.png" type="Texture" id=7]
+[ext_resource path="res://assets/Adventurer/Individual Sprites/adventurer-attack2-03.png" type="Texture" id=8]
+[ext_resource path="res://assets/Adventurer/Individual Sprites/adventurer-attack2-04.png" type="Texture" id=9]
+[ext_resource path="res://assets/Adventurer/Individual Sprites/adventurer-attack2-05.png" type="Texture" id=10]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-run-00.png" type="Texture" id=11]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-run-01.png" type="Texture" id=12]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-run-02.png" type="Texture" id=13]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-run-03.png" type="Texture" id=14]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-run-04.png" type="Texture" id=15]
+[ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-run-05.png" type="Texture" id=16]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "idle",
+"speed": 4.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ) ],
+"loop": false,
+"name": "oa",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ) ],
+"loop": true,
+"name": "running",
+"speed": 10.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 5.47324
+height = 15.9506
+
+[node name="KinematicsBody2d" type="KinematicBody2D"]
+script = ExtResource( 1 )
+
+[node name="Player" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "oa"
+frame = 2
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+position = Vector2( -0.790115, 4.60905 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+[connection signal="animation_finished" from="Player" to="." method="_on_animation_finished"]
