@@ -1,15 +1,25 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://assets/Min-sprites/004.png" type="Texture" id=1]
-[ext_resource path="res://assets/Min-sprites/005.png" type="Texture" id=2]
-[ext_resource path="res://assets/Min-sprites/007.png" type="Texture" id=3]
-[ext_resource path="res://assets/Min-sprites/006.png" type="Texture" id=4]
+[ext_resource path="res://Enemy.gd" type="Script" id=1]
+[ext_resource path="res://assets/Min-sprites/004.png" type="Texture" id=2]
+[ext_resource path="res://assets/Min-sprites/005.png" type="Texture" id=3]
+[ext_resource path="res://assets/Min-sprites/007.png" type="Texture" id=4]
+[ext_resource path="res://assets/Min-sprites/006.png" type="Texture" id=5]
+[ext_resource path="res://assets/Min-sprites/010.png" type="Texture" id=6]
+[ext_resource path="res://assets/Min-sprites/011.png" type="Texture" id=7]
+[ext_resource path="res://assets/Min-sprites/012.png" type="Texture" id=8]
+[ext_resource path="res://assets/Min-sprites/013.png" type="Texture" id=9]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
-"frames": [ ExtResource( 1 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 2 ), ExtResource( 4 ), ExtResource( 1 ), ExtResource( 2 ), ExtResource( 4 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "running",
 "speed": 5.0
 } ]
 
@@ -18,16 +28,16 @@ radius = 13.284
 height = 11.262
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
+scale = Vector2( 3, 3 )
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+[node name="Sprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0.0877914, 0 )
 frames = SubResource( 1 )
 animation = "idle"
-frame = 3
-playing = true
 
 [node name="BodyHitboxIdle" type="CollisionShape2D" parent="."]
 position = Vector2( 8.42799, 0.175581 )

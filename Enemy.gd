@@ -3,10 +3,11 @@ extends KinematicBody2D
 #-----------------------------------------------------
 # Numeric constants
 const BASE_SPEED = 500
-const JUMP_FORCE = -1100
+const JUMP_FORCE = -2200
 const GRAVITY = 9.8
-const WEIGHT = 8.16
+const WEIGHT = 20
 const EPSILON = 0.01
+const BODY_HITBOX_OFFSET = 8.428
 
 #-----------------------------------------------------
 # String constants
@@ -21,7 +22,7 @@ const RIGHT = "right"
 const JUMP = "jump"
 const SELECT = "select"
 
-# Player State
+# Enemy State
 const STATE_NO_ATTACK = "NO ATTACK"
 const STATE_ATTACK = "ATTACK"
 
@@ -34,20 +35,17 @@ var state = STATE_NO_ATTACK
 #-----------------------------------------------------
 # Member methods
 func flip(new_dir):
-	$Player.flip_h = false if new_dir == 1 else true
 	$Sprite.flip_h = false if new_dir == 1 else true
+	if new_dir == 1:
+		pass
 	dir = new_dir
 
 func set_running():
-	$Player.animation = RUNNING
-	$AnimationPlayer.play("Running")
+	$Sprite.animation = RUNNING
 
 func attack():
 	state = STATE_ATTACK
-	# $Player.play(ATTACK)
-	$Player.hide()
-	$Sprite.show()
-	$AnimationPlayer.play("OverheadAttack")
+	$Sprite.play(ATTACK)
 
 func calcGravity():
 	return WEIGHT * GRAVITY
@@ -56,9 +54,8 @@ func calcGravity():
 # Internal methods
 func _ready():
 	velocity = Vector2()
-	$Player.playing = true
+	$Sprite.playing = true
 	state = STATE_NO_ATTACK
-	$Sprite.hide()
 
 func _physics_process(_delta):
 	if state == STATE_NO_ATTACK:
@@ -73,13 +70,13 @@ func _physics_process(_delta):
 
 		if Input.is_action_just_pressed(JUMP) and is_on_floor():
 			velocity.y = JUMP_FORCE
-		elif Input.is_action_just_pressed(SELECT):
-			attack()
+		# elif Input.is_action_just_pressed(SELECT):
+		# 	attack()
 
 	velocity.y += calcGravity()
 	if abs(velocity.x) <= EPSILON and not state == STATE_ATTACK:
 		velocity.x = 0
-		$Player.animation = IDLE
+		$Sprite.animation = IDLE
 
 	velocity = move_and_slide(velocity, Vector2.UP)
 
@@ -87,14 +84,6 @@ func _physics_process(_delta):
 		velocity.x = lerp(velocity.x, 0, .6)
 
 func _on_animation_finished():
-	if $Player.animation == ATTACK:
-		$Player.animation = IDLE
-		$AnimationPlayer.play("Idle")
+	if $Sprite.animation == ATTACK:
+		$Sprite.animation = IDLE
 		state = STATE_NO_ATTACK
-
-func _on_animation_player_finished(animation_name):
-	state = STATE_NO_ATTACK
-	$Player.animation = IDLE
-	$AnimationPlayer.play("Idle")
-	$Player.show()
-	$Sprite.hide()
