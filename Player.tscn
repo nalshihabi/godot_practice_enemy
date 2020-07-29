@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/Adventurer/Adventurer/Individual Sprites/adventurer-idle-2-00.png" type="Texture" id=2]
@@ -27,7 +27,7 @@
 radius = 5.47324
 height = 15.9506
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=2]
 resource_name = "Idle"
 length = 0.8
 loop = true
@@ -68,9 +68,20 @@ tracks/2/keys = {
 "update": 0,
 "values": [ 0.0 ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitboxUpright:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
-[sub_resource type="Animation" id=2]
-resource_name = "OverheadAttack"
+[sub_resource type="Animation" id=3]
 length = 0.5
 step = 0.05
 tracks/0/type = "value"
@@ -109,8 +120,56 @@ tracks/2/keys = {
 "update": 1,
 "values": [ true, false ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitboxUpright:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -0.790115, 4.60905 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitboxUpright:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Hurtbox:shape:points")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ PoolVector2Array( 4, -11, 15, -11, 22.5, 0, 21, 10, 10, 17.5, -15, 15, -10, 10, 8, 11, 14, 0 ), PoolVector2Array( -18, 8, -3, 14, -24, 11 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("Hurtbox:disabled")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.3, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 resource_name = "Running"
 length = 0.5
 loop = true
@@ -152,7 +211,7 @@ tracks/2/keys = {
 "values": [ Vector2( 3.77505, 3.90672 ) ]
 }
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="SpriteFrames" id=5]
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
@@ -170,9 +229,12 @@ animations = [ {
 "speed": 10.0
 } ]
 
-[sub_resource type="CapsuleShape2D" id=4]
+[sub_resource type="CapsuleShape2D" id=6]
 radius = 7.05352
 height = 1.88637
+
+[sub_resource type="ConvexPolygonShape2D" id=7]
+points = PoolVector2Array( -18, 8, -3, 14, -24, 11 )
 
 [node name="KinematicsBody2d" type="KinematicBody2D"]
 script = ExtResource( 1 )
@@ -186,12 +248,13 @@ shape = SubResource( 1 )
 current = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Idle = SubResource( 5 )
-anims/OverheadAttack = SubResource( 2 )
-anims/Running = SubResource( 6 )
+anims/Idle = SubResource( 2 )
+anims/OverheadAttack = SubResource( 3 )
+anims/Running = SubResource( 4 )
 
 [node name="Player" type="AnimatedSprite" parent="."]
-frames = SubResource( 3 )
+visible = false
+frames = SubResource( 5 )
 animation = "oa"
 
 [node name="HitboxUpright" type="CollisionShape2D" parent="."]
@@ -199,12 +262,12 @@ position = Vector2( -0.790115, 4.60905 )
 shape = SubResource( 1 )
 
 [node name="HitboxCrouched" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2( 1.97531, 5.26749 )
-shape = SubResource( 4 )
-disabled = true
+shape = SubResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
+
+[node name="Hurtbox" type="CollisionShape2D" parent="."]
+shape = SubResource( 7 )
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_finished"]
-[connection signal="animation_finished" from="Player" to="." method="_on_animation_finished"]

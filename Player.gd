@@ -11,9 +11,9 @@ const EPSILON = 0.01
 #-----------------------------------------------------
 # String constants
 # Animation states
-const RUNNING = "running"
-const IDLE = "idle"
-const ATTACK = "oa"
+const RUNNING = "Running"
+const IDLE = "Idle"
+const ATTACK = "OverheadAttack"
 
 # Input keys
 const LEFT = "left"
@@ -34,20 +34,15 @@ var state = STATE_NO_ATTACK
 #-----------------------------------------------------
 # Member methods
 func flip(new_dir):
-	$Player.flip_h = false if new_dir == 1 else true
-	$Sprite.flip_h = false if new_dir == 1 else true
+	self.scale.x *= -1 if new_dir != dir else 1
 	dir = new_dir
 
 func set_running():
-	$Player.animation = RUNNING
-	$AnimationPlayer.play("Running")
+	$AnimationPlayer.play(RUNNING)
 
 func attack():
 	state = STATE_ATTACK
-	# $Player.play(ATTACK)
-	$Player.hide()
-	$Sprite.show()
-	$AnimationPlayer.play("OverheadAttack")
+	$AnimationPlayer.play(ATTACK)
 
 func calcGravity():
 	return WEIGHT * GRAVITY
@@ -56,18 +51,18 @@ func calcGravity():
 # Internal methods
 func _ready():
 	velocity = Vector2()
-	$Player.playing = true
 	state = STATE_NO_ATTACK
-	$Sprite.hide()
+	dir = RIGHT if self.scale.x > 0 else LEFT
+	$AnimationPlayer.play(IDLE)
 
 func _physics_process(_delta):
 	if state == STATE_NO_ATTACK:
 		if Input.is_action_pressed(RIGHT):
-			flip(1)
+			flip(RIGHT)
 			velocity.x = BASE_SPEED
 			set_running()
 		elif Input.is_action_pressed(LEFT):
-			flip(0)
+			flip(LEFT)
 			velocity.x = -BASE_SPEED
 			set_running()
 
@@ -79,22 +74,14 @@ func _physics_process(_delta):
 	velocity.y += calcGravity()
 	if abs(velocity.x) <= EPSILON and not state == STATE_ATTACK:
 		velocity.x = 0
-		$Player.animation = IDLE
+		$AnimationPlayer.play(IDLE)
 
 	velocity = move_and_slide(velocity, Vector2.UP)
 
 	if is_on_floor():
 		velocity.x = lerp(velocity.x, 0, .6)
 
-func _on_animation_finished():
-	if $Player.animation == ATTACK:
-		$Player.animation = IDLE
-		$AnimationPlayer.play("Idle")
-		state = STATE_NO_ATTACK
-
 func _on_animation_player_finished(animation_name):
-	state = STATE_NO_ATTACK
-	$Player.animation = IDLE
-	$AnimationPlayer.play("Idle")
-	$Player.show()
-	$Sprite.hide()
+	if animation_name == ATTACK:
+		state = STATE_NO_ATTACK
+		$AnimationPlayer.play(IDLE)
